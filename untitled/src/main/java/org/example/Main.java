@@ -107,6 +107,9 @@ public class Main {
         if (board[newRow][newCol].charAt(1) == board[currentRow][currentCol].charAt(1)) {
             return false; // Destination square has a friendly piece
         }
+        if (!(board[currentRow][currentCol].equals("[♟]") || board[currentRow][currentCol].equals("[♙]"))) {
+            return false;
+        }
 
         // Determine the direction of movement based on the player's turn
         int direction = isBlackTurn ? 1 : -1;
