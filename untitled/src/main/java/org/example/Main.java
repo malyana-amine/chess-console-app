@@ -94,8 +94,7 @@ public class Main {
         }
     }
 
-    // Function to check if a move is valid
-// Function to check if a move is valid
+
     public static boolean isValidMove(String[][] board, int currentRow, int currentCol, int newRow, int newCol, boolean isBlackTurn) {
         // Check if the source and destination positions are within the board bounds
         if (currentRow < 0 || currentRow >= 8 || currentCol < 0 || currentCol >= 8 ||
