@@ -1,5 +1,3 @@
-package org.example;
-
 import java.util.Scanner;
 
 public class Main {
@@ -50,7 +48,7 @@ public class Main {
         board[6][6] = "[♙]"; // White Pawn
         board[6][7] = "[♙]"; // White Pawn
 
-        // Print the chessboard with row and column labels
+        // Print the initial chessboard
         printChessboard(board);
 
         boolean isBlackTurn = true; // Initialize with black's turn
@@ -71,13 +69,27 @@ public class Main {
             int newRow = 8 - (newPosition.charAt(1) - '0');
             int newCol = newPosition.charAt(0) - 'a';
 
-            if (isValidMove(board, currentRow, currentCol, newRow, newCol, isBlackTurn)) {
-                board[newRow][newCol] = board[currentRow][currentCol];
-                board[currentRow][currentCol] = "[  ]";
-                printChessboard(board);
-                isBlackTurn = !isBlackTurn; // Switch turns
+            // Check if the piece at the current position is a knight or a pawn
+            if (board[currentRow][currentCol].equals("[♞]") || board[currentRow][currentCol].equals("[♘]")) {
+                if (isValidMoveforKnight(board, currentRow, currentCol, newRow, newCol, isBlackTurn)) {
+                    board[newRow][newCol] = board[currentRow][currentCol];
+                    board[currentRow][currentCol] = "[  ]";
+                    printChessboard(board);
+                    isBlackTurn = !isBlackTurn; // Switch turns
+                } else {
+                    System.out.println("Invalid move for the knight. Try again.");
+                }
+            } else if (board[currentRow][currentCol].equals("[♟]") || board[currentRow][currentCol].equals("[♙]")) {
+                if (isValidMoveforPawn(board, currentRow, currentCol, newRow, newCol, isBlackTurn)) {
+                    board[newRow][newCol] = board[currentRow][currentCol];
+                    board[currentRow][currentCol] = "[  ]";
+                    printChessboard(board);
+                    isBlackTurn = !isBlackTurn; // Switch turns
+                } else {
+                    System.out.println("Invalid move for the pawn. Try again.");
+                }
             } else {
-                System.out.println("Invalid move. Try again.");
+                System.out.println("Invalid selection. Try again.");
             }
         }
     }
@@ -94,8 +106,7 @@ public class Main {
         }
     }
 
-
-    public static boolean isValidMove(String[][] board, int currentRow, int currentCol, int newRow, int newCol, boolean isBlackTurn) {
+    public static boolean isValidMoveforPawn(String[][] board, int currentRow, int currentCol, int newRow, int newCol, boolean isBlackTurn) {
         // Check if the source and destination positions are within the board bounds
         if (currentRow < 0 || currentRow >= 8 || currentCol < 0 || currentCol >= 8 ||
                 newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) {
@@ -129,8 +140,29 @@ public class Main {
             return true;
         }
 
+        return false;
+    }
+
+    public static boolean isValidMoveforKnight(String[][] board, int currentRow, int currentCol, int newRow, int newCol, boolean isBlackTurn) {
+        // Check if the source and destination positions are within the board bounds
+        if (currentRow < 0 || currentRow >= 8 || currentCol < 0 || currentCol >= 8 ||
+                newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) {
+            return false;
+        }
+
+        // Check if the destination square is not occupied by a friendly piece
+        if (board[newRow][newCol].charAt(1) == board[currentRow][currentCol].charAt(1)) {
+            return false; // Destination square has a friendly piece
+        }
+
+        // Knight moves in an "L" shape
+        int rowDiff = Math.abs(newRow - currentRow);
+        int colDiff = Math.abs(newCol - currentCol);
+
+        if ((rowDiff == 2 && colDiff == 1) || (rowDiff == 1 && colDiff == 2)) {
+            return true;
+        }
+
         return false; // Invalid move
     }
-
-    }
-
+}
