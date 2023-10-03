@@ -30,13 +30,15 @@ import java.util.Scanner;
                 int newRow = 8 - (newPosition.charAt(1) - '0');
                 int newCol = newPosition.charAt(0) - 'a';
 
-                // Check if the move is valid for a pawn or a knight
+                // Check if the move is valid for a pawn, knight, or rook
                 boolean isValidMove = false;
 
                 if (chessGame.board[currentRow][currentCol].equals("[♟]") || chessGame.board[currentRow][currentCol].equals("[♙]")) {
                     isValidMove = chessGame.isValidPawnMove(currentRow, currentCol, newRow, newCol, chessGame.isBlackTurn);
                 } else if (chessGame.board[currentRow][currentCol].equals("[♞]") || chessGame.board[currentRow][currentCol].equals("[♘]")) {
                     isValidMove = chessGame.isValidKnightMove(currentRow, currentCol, newRow, newCol);
+                } else if (chessGame.board[currentRow][currentCol].equals("[♜]") || chessGame.board[currentRow][currentCol].equals("[♖]")) {
+                    isValidMove = chessGame.isValidRookMove(currentRow, currentCol, newRow, newCol);
                 }
 
                 if (isValidMove) {

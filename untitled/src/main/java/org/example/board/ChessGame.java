@@ -140,13 +140,62 @@ public class ChessGame {
         return (rowDiff == 2 && colDiff == 1) || (rowDiff == 1 && colDiff == 2);
     }
 
+    public boolean isValidRockMove(){
+        // rock logic
+        return false;
+    }
+
+    public boolean isValidRookMove(int currentRow, int currentCol, int newRow, int newCol) {
+        if (currentRow < 0 || currentRow >= 8 || currentCol < 0 || currentCol >= 8 ||
+                newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) {
+            return false;
+        }
+
+        // Rook can move either horizontally (in the same row) or vertically (in the same column)
+        if (currentRow == newRow && currentCol != newCol) {
+            // Moving horizontally
+            int step = (newCol > currentCol) ? 1 : -1;
+            for (int col = currentCol + step; col != newCol; col += step) {
+                if (!board[currentRow][col].equals("[  ]")) {
+                    return false; // There's an obstruction in the path
+                }
+            }
+            return true;
+        } else if (currentCol == newCol && currentRow != newRow) {
+            // Moving vertically
+            int step = (newRow > currentRow) ? 1 : -1;
+            for (int row = currentRow + step; row != newRow; row += step) {
+                if (!board[row][currentCol].equals("[  ]")) {
+                    return false; // There's an obstruction in the path
+                }
+            }
+            return true;
+        }
+
+        return false; // Invalid Rook move
+    }
+
+
 
 
 
     public void movePiece(int currentRow, int currentCol, int newRow, int newCol) {
-        // Move the piece to the new position
-        board[newRow][newCol] = board[currentRow][currentCol];
-        board[currentRow][currentCol] = "[  ]"; // Clear the old position
+        if (isValidPawnMove(currentRow, currentCol, newRow, newCol, isBlackTurn)) {
+            // Move the Pawn to the new position
+            board[newRow][newCol] = board[currentRow][currentCol];
+            board[currentRow][currentCol] = "[  ]"; // Clear the old position
+        } else if (isValidKnightMove(currentRow, currentCol, newRow, newCol)) {
+            // Move the Knight to the new position
+            board[newRow][newCol] = board[currentRow][currentCol];
+            board[currentRow][currentCol] = "[  ]"; // Clear the old position
+        } else if (isValidRookMove(currentRow, currentCol, newRow, newCol)) {
+            // Move the Rook to the new position
+            board[newRow][newCol] = board[currentRow][currentCol];
+            board[currentRow][currentCol] = "[  ]"; // Clear the old position
+        } else {
+            System.out.println("Invalid move. Please try again.");
+        }
     }
+
 
 }
