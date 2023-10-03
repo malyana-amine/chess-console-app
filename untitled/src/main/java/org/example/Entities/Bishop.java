@@ -11,8 +11,6 @@ public class Bishop extends Piece{
     public boolean IsValidMove(String[][] board, int currentRow, int currentCol, int newRow, int newCol, boolean isBlackTurn) {
 
 
-
-
             // Check if the source and destination positions are within the board bounds
             if (currentRow < 0 || currentRow >= 8 || currentCol < 0 || currentCol >= 8 ||
                     newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) {

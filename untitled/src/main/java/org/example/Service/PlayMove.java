@@ -1,49 +1,53 @@
 package org.example.Service;
 
+import org.example.Entities.ColorEnum;
 import org.example.board.ChessGame;
 
 import java.util.Scanner;
 
-public class PlayMove {
 
-    public void play() {
-        String currentPosition;
-        String newPosition;
-        boolean isBlackTurn = true;
-        Scanner scanner = new Scanner(System.in);
-        ChessGame chessGame = new ChessGame();
-        
-        while (true) {
+    public class PlayMove {
 
-            chessGame.printChessboard();
-            String currentPlayer = isBlackTurn ? "Black" : "White";
-            System.out.println(currentPlayer + "'s turn.");
+        public void play() {
 
-            System.out.println("Enter the current position (e.g., 'b7'): ");
-            currentPosition = scanner.next();
-            System.out.println("Enter the new position (e.g., 'b5'): ");
-            newPosition = scanner.next();
+            boolean isBlackTurn = true;
+            Scanner scanner = new Scanner(System.in);
+            ChessGame chessGame = new ChessGame();
 
-            if (isValidMove(currentPosition, newPosition)) {
-                makeMove(currentPosition, newPosition);
+            while (true) {
                 chessGame.printChessboard();
-                isBlackTurn = !isBlackTurn; // Switch turns
-            } else {
-                System.out.println("Invalid move. Try again.");
+
+                String currentPlayer = chessGame.isBlackTurn ? "Black" : "White";
+                System.out.println(currentPlayer + "'s turn.");
+
+                System.out.println("Enter the current position (e.g., 'b7'): ");
+                String currentPosition = scanner.next();
+                System.out.println("Enter the new position (e.g., 'b5'): ");
+                String newPosition = scanner.next();
+
+                int currentRow = 8 - (currentPosition.charAt(1) - '0');
+                int currentCol = currentPosition.charAt(0) - 'a';
+                int newRow = 8 - (newPosition.charAt(1) - '0');
+                int newCol = newPosition.charAt(0) - 'a';
+
+                // Check if the move is valid for a pawn or a knight
+                boolean isValidMove = false;
+
+                if (chessGame.board[currentRow][currentCol].equals("[♟]") || chessGame.board[currentRow][currentCol].equals("[♙]")) {
+                    isValidMove = chessGame.isValidPawnMove(currentRow, currentCol, newRow, newCol, chessGame.isBlackTurn);
+                } else if (chessGame.board[currentRow][currentCol].equals("[♞]") || chessGame.board[currentRow][currentCol].equals("[♘]")) {
+                    isValidMove = chessGame.isValidKnightMove(currentRow, currentCol, newRow, newCol);
+                }
+
+                if (isValidMove) {
+                    // Move the piece
+                    chessGame.movePiece(currentRow, currentCol, newRow, newCol);
+                    // Switch players' turns
+                    chessGame.isBlackTurn = !chessGame.isBlackTurn;
+                } else {
+                    System.out.println("Invalid move. Try again.");
+                }
             }
         }
     }
 
-    private boolean isValidMove(String currentPosition, String newPosition) {
-        // Implement your move validation logic here
-        // You can check if the move is valid for the specific piece type (e.g., Pawn, Knight)
-        // You may need additional methods or classes for this.
-        return true; // Replace with your logic
-    }
-
-    private void makeMove(String currentPosition, String newPosition) {
-        // Implement the logic to update the board based on the move
-        // You can move the piece, capture opponents, and handle promotions, castling, etc.
-        // You may need additional methods or classes for this.
-    }
-}

@@ -5,8 +5,8 @@ import org.example.Entities.*;
 import java.util.Scanner;
 
 public class ChessGame {
-    private String[][] board;
-    private boolean isBlackTurn;
+    public String[][] board;
+    public boolean isBlackTurn;
     private Scanner scanner;
 
     public ChessGame() {
@@ -90,4 +90,63 @@ public class ChessGame {
             System.out.println(); // Move to the next row
         }
     }
+
+    public boolean  isValidPawnMove(int currentRow, int currentCol, int newRow, int newCol, boolean isBlackTurn) {
+        if (currentRow < 0 || currentRow >= 8 || currentCol < 0 || currentCol >= 8 ||
+                newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) {
+            return false;
+        }
+
+        // Check if the destination square is not occupied by a friendly piece
+        if (board[newRow][newCol].charAt(1) == board[currentRow][currentCol].charAt(1)) {
+            return false; // Destination square has a friendly piece
+        }
+        if (!(board[currentRow][currentCol].equals("[♟]") || board[currentRow][currentCol].equals("[♙]"))) {
+            return false;
+        }
+
+        // Determine the direction of movement based on the player's turn
+        int direction = isBlackTurn ? 1 : -1;
+
+        // Pawn moves forward
+        if (currentCol == newCol && currentRow + direction == newRow && board[newRow][newCol].equals("[  ]")) {
+            return true;
+        }
+
+        // Pawn moves two squares forward on its first move
+        if (currentCol == newCol && currentRow + 2 * direction == newRow && currentRow == (isBlackTurn ? 1 : 6) && board[newRow][newCol].equals("[  ]")) {
+            return true;
+        }
+
+        // Pawn captures diagonally
+        if (Math.abs(newCol - currentCol) == 1 && currentRow + direction == newRow &&
+                board[newRow][newCol].charAt(1) != board[currentRow][currentCol].charAt(1)) {
+            return true;
+        }
+
+        return false;
+    }
+
+    public boolean isValidKnightMove(int currentRow, int currentCol, int newRow, int newCol) {
+        if (currentRow < 0 || currentRow >= 8 || currentCol < 0 || currentCol >= 8 ||
+                newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) {
+            return false;
+        }
+
+        int rowDiff = Math.abs(newRow - currentRow);
+        int colDiff = Math.abs(newCol - currentCol);
+
+        // Check if the move is an L-shape (two squares in one direction and one square in a perpendicular direction)
+        return (rowDiff == 2 && colDiff == 1) || (rowDiff == 1 && colDiff == 2);
+    }
+
+
+
+
+    public void movePiece(int currentRow, int currentCol, int newRow, int newCol) {
+        // Move the piece to the new position
+        board[newRow][newCol] = board[currentRow][currentCol];
+        board[currentRow][currentCol] = "[  ]"; // Clear the old position
+    }
+
 }
