@@ -175,6 +175,54 @@ public class ChessGame {
         return false; // Invalid Rook move
     }
 
+    public boolean isValidBishopMove(int currentRow, int currentCol, int newRow, int newCol) {
+        if (currentRow < 0 || currentRow >= 8 || currentCol < 0 || currentCol >= 8 ||
+                newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) {
+            return false;
+        }
+
+        // Check if the move is diagonal (same absolute difference in rows and columns)
+        int rowDiff = Math.abs(newRow - currentRow);
+        int colDiff = Math.abs(newCol - currentCol);
+
+        if (rowDiff == colDiff) {
+            // Check if there are no obstructions in the diagonal path
+            int rowStep = (newRow > currentRow) ? 1 : -1;
+            int colStep = (newCol > currentCol) ? 1 : -1;
+
+            for (int row = currentRow + rowStep, col = currentCol + colStep;
+                 row != newRow && col != newCol;
+                 row += rowStep, col += colStep) {
+                if (!board[row][col].equals("[  ]")) {
+                    return false; // There's an obstruction in the diagonal path
+                }
+            }
+
+            return true;
+        }
+
+        return false; // Invalid Bishop move
+    }
+
+    public boolean isValidQueenMove(int currentRow, int currentCol, int newRow, int newCol) {
+        if (currentRow < 0 || currentRow >= 8 || currentCol < 0 || currentCol >= 8 ||
+                newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) {
+            return false;
+        }
+
+        // Check if the move is a valid Rook move (horizontal or vertical)
+        if (isValidRookMove(currentRow, currentCol, newRow, newCol)) {
+            return true;
+        }
+
+        // Check if the move is a valid Bishop move (diagonal)
+        if (isValidBishopMove(currentRow, currentCol, newRow, newCol)) {
+            return true;
+        }
+
+        return false; // Invalid Queen move
+    }
+
 
 
 
@@ -192,10 +240,19 @@ public class ChessGame {
             // Move the Rook to the new position
             board[newRow][newCol] = board[currentRow][currentCol];
             board[currentRow][currentCol] = "[  ]"; // Clear the old position
+        } else if (isValidBishopMove(currentRow, currentCol, newRow, newCol)) {
+            // Move the Bishop to the new position
+            board[newRow][newCol] = board[currentRow][currentCol];
+            board[currentRow][currentCol] = "[  ]"; // Clear the old position
+        } else if (isValidQueenMove(currentRow, currentCol, newRow, newCol)) {
+            // Move the Queen to the new position
+            board[newRow][newCol] = board[currentRow][currentCol];
+            board[currentRow][currentCol] = "[  ]"; // Clear the old position
         } else {
             System.out.println("Invalid move. Please try again.");
         }
     }
+
 
 
 
