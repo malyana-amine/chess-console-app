@@ -159,7 +159,7 @@ public class ChessGame {
             // Moving horizontally
             int step = (newCol > currentCol) ? 1 : -1;
             for (int col = currentCol + step; col != newCol; col += step) {
-                if (!board[currentRow][col].equals("[  ]")) {
+                if (!board[currentRow][col].equals("[ ]")) {
                     return false; // There's an obstruction in the path
                 }
             }
@@ -168,7 +168,7 @@ public class ChessGame {
             // Moving vertically
             int step = (newRow > currentRow) ? 1 : -1;
             for (int row = currentRow + step; row != newRow; row += step) {
-                if (!board[row][currentCol].equals("[  ]")) {
+                if (!board[row][currentCol].equals("[ ]")) {
                     return false; // There's an obstruction in the path
                 }
             }
@@ -196,7 +196,7 @@ public class ChessGame {
             for (int row = currentRow + rowStep, col = currentCol + colStep;
                  row != newRow && col != newCol;
                  row += rowStep, col += colStep) {
-                if (!board[row][col].equals("[  ]")) {
+                if (!board[row][col].equals("[ ]")) {
                     return false; // There's an obstruction in the diagonal path
                 }
             }
