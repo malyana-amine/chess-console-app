@@ -99,6 +99,7 @@ public class ChessGame {
 
         // Check if the destination square is not occupied by a friendly piece
         if (board[newRow][newCol].charAt(1) == board[currentRow][currentCol].charAt(1)) {
+            System.out.println(board[newRow][newCol].charAt(1)+"eee"+board[currentRow][currentCol].charAt(1));
             return false; // Destination square has a friendly piece
         }
         if (!(board[currentRow][currentCol].equals("[♟]") || board[currentRow][currentCol].equals("[♙]"))) {

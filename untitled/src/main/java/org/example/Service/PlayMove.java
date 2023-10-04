@@ -33,7 +33,7 @@ public class PlayMove {
             boolean isValidMove = false;
 
             if (chessGame.board[currentRow][currentCol].equals("[♟]") || chessGame.board[currentRow][currentCol].equals("[♙]")) {
-                isValidMove = true;
+                isValidMove = chessGame.isValidPawnMove(currentRow, currentCol, newRow, newCol, chessGame.isBlackTurn);
             } else if (chessGame.board[currentRow][currentCol].equals("[♞]") || chessGame.board[currentRow][currentCol].equals("[♘]")) {
                 isValidMove = chessGame.isValidKnightMove(currentRow, currentCol, newRow, newCol);
             } else if (chessGame.board[currentRow][currentCol].equals("[♜]") || chessGame.board[currentRow][currentCol].equals("[♖]")) {
