@@ -102,7 +102,9 @@ public class ChessGame {
             System.out.println(board[newRow][newCol].charAt(1)+"eee"+board[currentRow][currentCol].charAt(1));
             return false; // Destination square has a friendly piece
         }
+
         if (!(board[currentRow][currentCol].equals("[♟]") || board[currentRow][currentCol].equals("[♙]"))) {
+
             return false;
         }
 
@@ -110,15 +112,14 @@ public class ChessGame {
         int direction = isBlackTurn ? 1 : -1;
 
         // Pawn moves forward
-        if (currentCol == newCol && currentRow + direction == newRow && board[newRow][newCol].equals("[  ]")) {
+        if (currentCol == newCol && currentRow + direction == newRow && board[newRow][newCol].equals("[ ]")) {
             return true;
         }
-
+        System.out.println(board[newRow][newCol].equals("[ ]"));
         // Pawn moves two squares forward on its first move
-        if (currentCol == newCol && currentRow + 2 * direction == newRow && currentRow == (isBlackTurn ? 1 : 6) && board[newRow][newCol].equals("[  ]")) {
+        if (currentCol == newCol && currentRow + 2 * direction == newRow && currentRow == (isBlackTurn ? 1 : 6) && board[newRow][newCol].equals("[ ]")) {
             return true;
         }
-
         // Pawn captures diagonally
         if (Math.abs(newCol - currentCol) == 1 && currentRow + direction == newRow &&
                 board[newRow][newCol].charAt(1) != board[currentRow][currentCol].charAt(1)) {
@@ -126,6 +127,7 @@ public class ChessGame {
         }
 
         return false;
+
     }
 
     public boolean isValidKnightMove(int currentRow, int currentCol, int newRow, int newCol) {
@@ -232,23 +234,23 @@ public class ChessGame {
         if (isValidPawnMove(currentRow, currentCol, newRow, newCol, isBlackTurn)) {
             // Move the Pawn to the new position
             board[newRow][newCol] = board[currentRow][currentCol];
-            board[currentRow][currentCol] = "[  ]"; // Clear the old position
+            board[currentRow][currentCol] = "[ ]"; // Clear the old position
         } else if (isValidKnightMove(currentRow, currentCol, newRow, newCol)) {
             // Move the Knight to the new position
             board[newRow][newCol] = board[currentRow][currentCol];
-            board[currentRow][currentCol] = "[  ]"; // Clear the old position
+            board[currentRow][currentCol] = "[ ]"; // Clear the old position
         } else if (isValidRookMove(currentRow, currentCol, newRow, newCol)) {
             // Move the Rook to the new position
             board[newRow][newCol] = board[currentRow][currentCol];
-            board[currentRow][currentCol] = "[  ]"; // Clear the old position
+            board[currentRow][currentCol] = "[ ]"; // Clear the old position
         } else if (isValidBishopMove(currentRow, currentCol, newRow, newCol)) {
             // Move the Bishop to the new position
             board[newRow][newCol] = board[currentRow][currentCol];
-            board[currentRow][currentCol] = "[  ]"; // Clear the old position
+            board[currentRow][currentCol] = "[ ]"; // Clear the old position
         } else if (isValidQueenMove(currentRow, currentCol, newRow, newCol)) {
             // Move the Queen to the new position
             board[newRow][newCol] = board[currentRow][currentCol];
-            board[currentRow][currentCol] = "[  ]"; // Clear the old position
+            board[currentRow][currentCol] = "[ ]"; // Clear the old position
         } else {
             System.out.println("Invalid move. Please try again.");
         }
