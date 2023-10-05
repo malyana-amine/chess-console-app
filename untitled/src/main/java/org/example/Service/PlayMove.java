@@ -29,7 +29,7 @@ public class PlayMove {
             int newRow = 8 - (newPosition.charAt(1) - '0');
             int newCol = newPosition.charAt(0) - 'a';
 
-            // Check if the move is valid for a pawn, knight, rook, bishop, or queen
+            // Check if the move is valid for a pawn, knight, rook, bishop, queen, or king
             boolean isValidMove = false;
 
             if (chessGame.board[currentRow][currentCol].equals("[♟]") || chessGame.board[currentRow][currentCol].equals("[♙]")) {
@@ -42,6 +42,8 @@ public class PlayMove {
                 isValidMove = chessGame.isValidBishopMove(currentRow, currentCol, newRow, newCol);
             } else if (chessGame.board[currentRow][currentCol].equals("[♛]") || chessGame.board[currentRow][currentCol].equals("[♕]")) {
                 isValidMove = chessGame.isValidQueenMove(currentRow, currentCol, newRow, newCol);
+            } else if (chessGame.board[currentRow][currentCol].equals("[♚]") || chessGame.board[currentRow][currentCol].equals("[♔]")) {
+                isValidMove = chessGame.isValidMoveForKing(currentRow, currentCol, newRow, newCol);
             }
 
             if (isValidMove) {

@@ -225,8 +225,18 @@ public class ChessGame {
 
         return false; // Invalid Queen move
     }
+    public boolean isValidMoveForKing(int currentRow, int currentCol, int newRow, int newCol) {
+        if (currentRow < 0 || currentRow >= 8 || currentCol < 0 || currentCol >= 8 ||
+                newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) {
+            return false;
+        }
 
+        int rowDiff = Math.abs(newRow - currentRow);
+        int colDiff = Math.abs(newCol - currentCol);
 
+        // Check if the move is within one square in any direction (horizontally, vertically, or diagonally)
+        return (rowDiff <= 1 && colDiff <= 1);
+    }
 
 
 
@@ -251,10 +261,15 @@ public class ChessGame {
             // Move the Queen to the new position
             board[newRow][newCol] = board[currentRow][currentCol];
             board[currentRow][currentCol] = "[ ]"; // Clear the old position
+        } else if (isValidMoveForKing(currentRow, currentCol, newRow, newCol)) {
+            // Move the King to the new position
+            board[newRow][newCol] = board[currentRow][currentCol];
+            board[currentRow][currentCol] = "[ ]"; // Clear the old position
         } else {
             System.out.println("Invalid move. Please try again.");
         }
     }
+
 
 
 
