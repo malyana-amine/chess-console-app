@@ -8,11 +8,20 @@ public class ChessGame {
     public String[][] board;
     public boolean isBlackTurn;
     private Scanner scanner;
+    public Knight WhiteKnight;
+    public Knight BlackKnight;
+
+    public Pawn BlackPawn;
+
+    public Pawn WhitePawn;
 
     public ChessGame() {
         board = new String[8][8];
         isBlackTurn = true;
         scanner = new Scanner(System.in);
+
+
+
 
         initializeBoard();
     }
@@ -27,7 +36,7 @@ public class ChessGame {
 
 
         Rook BlackRook = new Rook("[♜]", ColorEnum.BLACK);
-        Knight BlackKnight = new Knight("[♞]", ColorEnum.BLACK);
+        BlackKnight = new Knight("[♞]", ColorEnum.BLACK);
         Bishop BlackBishop = new Bishop("[♝]", ColorEnum.BLACK);
         Queen blackQueen = new Queen("[♛]", ColorEnum.BLACK);
         King blackKing = new King("[♚]", ColorEnum.BLACK);
@@ -41,9 +50,10 @@ public class ChessGame {
         board[0][6] = BlackKnight.getSymbol(); // Black Knight
         board[0][7] = BlackRook.getSymbol(); // Black Rook
 
-        Pawn BlackPawn = new Pawn("[♟]", ColorEnum.BLACK);
+        BlackPawn = new Pawn("[♟]", ColorEnum.BLACK);
 
         board[1][0] = BlackPawn.getSymbol(); // Black Pawn
+
         board[1][1] = BlackPawn.getSymbol();// Black Pawn
         board[1][2] = BlackPawn.getSymbol(); // Black Pawn
         board[1][3] = BlackPawn.getSymbol(); // Black Pawn
@@ -54,7 +64,7 @@ public class ChessGame {
 
 
         Rook WhiteRook = new Rook("[♖]", ColorEnum.WHITE);
-        Knight WhiteKnight = new Knight("[♘]", ColorEnum.WHITE);
+        WhiteKnight = new Knight("[♘]", ColorEnum.WHITE);
         Bishop WhiteBishop = new Bishop("[♗]", ColorEnum.WHITE);
         Queen WhiteQueen = new Queen("[♕]", ColorEnum.WHITE);
         King WhiteKing = new King("[♔]", ColorEnum.WHITE);
@@ -68,7 +78,7 @@ public class ChessGame {
         board[7][6] = WhiteKnight.getSymbol(); // White Knight
         board[7][7] = WhiteRook.getSymbol(); // White Rook
 
-        Pawn WhitePawn = new Pawn("[♙]", ColorEnum.WHITE);
+        WhitePawn = new Pawn("[♙]", ColorEnum.WHITE);
 
         board[6][0] = WhitePawn.getSymbol(); // White Pawn
         board[6][1] = WhitePawn.getSymbol(); // White Pawn
@@ -91,7 +101,8 @@ public class ChessGame {
         }
     }
 
-    public boolean  isValidPawnMove(int currentRow, int currentCol, int newRow, int newCol, boolean isBlackTurn) {
+
+    public boolean  isValidPawnMove(int currentRow, int currentCol, int newRow, int newCol, boolean isBlackTurn, Pawn pawn) {
         if (currentRow < 0 || currentRow >= 8 || currentCol < 0 || currentCol >= 8 ||
                 newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) {
             return false;
@@ -102,8 +113,13 @@ public class ChessGame {
             System.out.println(board[newRow][newCol].charAt(1)+"eee"+board[currentRow][currentCol].charAt(1));
             return false; // Destination square has a friendly piece
         }
+        char destinationPiece = board[newRow][newCol].charAt(1);
+        if (destinationPiece == ' ' || (pawn.getColor() != ColorEnum.fromChar(destinationPiece))) {
+            return true;
+        }
 
         if (!(board[currentRow][currentCol].equals("[♟]") || board[currentRow][currentCol].equals("[♙]"))) {
+
 
             return false;
         }
@@ -120,9 +136,10 @@ public class ChessGame {
         if (currentCol == newCol && currentRow + 2 * direction == newRow && currentRow == (isBlackTurn ? 1 : 6) && board[newRow][newCol].equals("[ ]")) {
             return true;
         }
+
         // Pawn captures diagonally
         if (Math.abs(newCol - currentCol) == 1 && currentRow + direction == newRow &&
-                board[newRow][newCol].charAt(1) != board[currentRow][currentCol].charAt(1)) {
+                board[newRow][newCol].charAt(1) != board[newRow][newCol].charAt(1)) {
             return true;
         }
 
@@ -130,23 +147,29 @@ public class ChessGame {
 
     }
 
-    public boolean isValidKnightMove(int currentRow, int currentCol, int newRow, int newCol) {
-        if (currentRow < 0 || currentRow >= 8 || currentCol < 0 || currentCol >= 8 ||
-                newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) {
-            return false;
-        }
-
-        int rowDiff = Math.abs(newRow - currentRow);
-        int colDiff = Math.abs(newCol - currentCol);
-
-        // Check if the move is an L-shape (two squares in one direction and one square in a perpendicular direction)
-        return (rowDiff == 2 && colDiff == 1) || (rowDiff == 1 && colDiff == 2);
-    }
-
-    public boolean isValidRockMove(){
-        // rock logic
+public boolean isValidKnightMove(int currentRow, int currentCol, int newRow, int newCol, Knight knight) {
+    if (currentRow < 0 || currentRow >= 8 || currentCol < 0 || currentCol >= 8 ||
+            newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) {
         return false;
     }
+
+    // Check if the move is an L-shape (two squares in one direction and one square in a perpendicular direction)
+    int rowDiff = Math.abs(newRow - currentRow);
+    int colDiff = Math.abs(newCol - currentCol);
+
+    if ((rowDiff == 2 && colDiff == 1) || (rowDiff == 1 && colDiff == 2)) {
+        // Check if the destination square is empty or occupied by an enemy piece
+        char destinationPiece = board[newRow][newCol].charAt(1);
+        if (destinationPiece == ' ' || (knight.getColor() != ColorEnum.fromChar(destinationPiece))) {
+            return true;
+        }
+    }
+
+    return false;
+}
+
+
+
 
     public boolean isValidRookMove(int currentRow, int currentCol, int newRow, int newCol) {
         if (currentRow < 0 || currentRow >= 8 || currentCol < 0 || currentCol >= 8 ||
@@ -241,34 +264,44 @@ public class ChessGame {
 
 
     public void movePiece(int currentRow, int currentCol, int newRow, int newCol) {
-        if (isValidPawnMove(currentRow, currentCol, newRow, newCol, isBlackTurn)) {
+        if (isValidPawnMove(currentRow, currentCol, newRow, newCol, isBlackTurn, BlackPawn) ||
+                isValidPawnMove(currentRow, currentCol, newRow, newCol, isBlackTurn, WhitePawn)) {
             // Move the Pawn to the new position
             board[newRow][newCol] = board[currentRow][currentCol];
             board[currentRow][currentCol] = "[ ]"; // Clear the old position
-        } else if (isValidKnightMove(currentRow, currentCol, newRow, newCol)) {
+            isBlackTurn = !isBlackTurn; // Toggle the turn
+        } else if (isValidKnightMove(currentRow, currentCol, newRow, newCol, BlackKnight) ||
+                isValidKnightMove(currentRow, currentCol, newRow, newCol, WhiteKnight)) {
             // Move the Knight to the new position
             board[newRow][newCol] = board[currentRow][currentCol];
             board[currentRow][currentCol] = "[ ]"; // Clear the old position
+            isBlackTurn = !isBlackTurn; // Toggle the turn
         } else if (isValidRookMove(currentRow, currentCol, newRow, newCol)) {
             // Move the Rook to the new position
             board[newRow][newCol] = board[currentRow][currentCol];
             board[currentRow][currentCol] = "[ ]"; // Clear the old position
+            isBlackTurn = !isBlackTurn; // Toggle the turn
         } else if (isValidBishopMove(currentRow, currentCol, newRow, newCol)) {
             // Move the Bishop to the new position
             board[newRow][newCol] = board[currentRow][currentCol];
             board[currentRow][currentCol] = "[ ]"; // Clear the old position
+            isBlackTurn = !isBlackTurn; // Toggle the turn
         } else if (isValidQueenMove(currentRow, currentCol, newRow, newCol)) {
             // Move the Queen to the new position
             board[newRow][newCol] = board[currentRow][currentCol];
             board[currentRow][currentCol] = "[ ]"; // Clear the old position
+            isBlackTurn = !isBlackTurn; // Toggle the turn
         } else if (isValidMoveForKing(currentRow, currentCol, newRow, newCol)) {
             // Move the King to the new position
             board[newRow][newCol] = board[currentRow][currentCol];
             board[currentRow][currentCol] = "[ ]"; // Clear the old position
+            isBlackTurn = !isBlackTurn; // Toggle the turn
         } else {
             System.out.println("Invalid move. Please try again.");
         }
     }
+
+
 
 
 

@@ -33,9 +33,19 @@ public class PlayMove {
             boolean isValidMove = false;
 
             if (chessGame.board[currentRow][currentCol].equals("[♟]") || chessGame.board[currentRow][currentCol].equals("[♙]")) {
-                isValidMove = chessGame.isValidPawnMove(currentRow, currentCol, newRow, newCol, chessGame.isBlackTurn);
+                if (chessGame.isBlackTurn) {
+                    // Check if it's a valid black pawn move
+                    isValidMove = chessGame.isValidPawnMove(currentRow, currentCol, newRow, newCol, chessGame.isBlackTurn, chessGame.BlackPawn);
+                } else {
+                    // Check if it's a valid white pawn move
+                    isValidMove = chessGame.isValidPawnMove(currentRow, currentCol, newRow, newCol, chessGame.isBlackTurn, chessGame.WhitePawn);
+                }
             } else if (chessGame.board[currentRow][currentCol].equals("[♞]") || chessGame.board[currentRow][currentCol].equals("[♘]")) {
-                isValidMove = chessGame.isValidKnightMove(currentRow, currentCol, newRow, newCol);
+                if (chessGame.isBlackTurn) {
+                    isValidMove = chessGame.isValidKnightMove(currentRow, currentCol, newRow, newCol, chessGame.BlackKnight);
+                } else {
+                    isValidMove = chessGame.isValidKnightMove(currentRow, currentCol, newRow, newCol, chessGame.WhiteKnight);
+                }
             } else if (chessGame.board[currentRow][currentCol].equals("[♜]") || chessGame.board[currentRow][currentCol].equals("[♖]")) {
                 isValidMove = chessGame.isValidRookMove(currentRow, currentCol, newRow, newCol);
             } else if (chessGame.board[currentRow][currentCol].equals("[♝]") || chessGame.board[currentRow][currentCol].equals("[♗]")) {
@@ -45,6 +55,7 @@ public class PlayMove {
             } else if (chessGame.board[currentRow][currentCol].equals("[♚]") || chessGame.board[currentRow][currentCol].equals("[♔]")) {
                 isValidMove = chessGame.isValidMoveForKing(currentRow, currentCol, newRow, newCol);
             }
+
 
             if (isValidMove) {
                 // Move the piece
