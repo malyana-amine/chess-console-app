@@ -149,7 +149,10 @@ public class ChessGame {
         if (Math.abs(newCol - currentCol) == 1 && currentRow + direction == newRow &&
                 board[newRow][newCol].charAt(1) != ' ' &&
                 board[newRow][newCol].charAt(1) != board[currentRow][currentCol].charAt(1)) {
-            return true;
+            char destinationPiece = board[newRow][newCol].charAt(1);
+            if (destinationPiece == ' ' || (pawn.getColor() != ColorEnum.fromChar(destinationPiece))) {
+                return true;
+            }
         }
 
 
