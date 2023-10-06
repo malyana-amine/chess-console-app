@@ -113,10 +113,7 @@ public class ChessGame {
             System.out.println(board[newRow][newCol].charAt(1)+"eee"+board[currentRow][currentCol].charAt(1));
             return false; // Destination square has a friendly piece
         }
-        char destinationPiece = board[newRow][newCol].charAt(1);
-        if (destinationPiece == ' ' || (pawn.getColor() != ColorEnum.fromChar(destinationPiece))) {
-            return true;
-        }
+
 
         if (!(board[currentRow][currentCol].equals("[♟]") || board[currentRow][currentCol].equals("[♙]"))) {
 
@@ -129,19 +126,32 @@ public class ChessGame {
 
         // Pawn moves forward
         if (currentCol == newCol && currentRow + direction == newRow && board[newRow][newCol].equals("[ ]")) {
-            return true;
+            char destinationPiece = board[newRow][newCol].charAt(1);
+            if (destinationPiece == ' ' || (pawn.getColor() != ColorEnum.fromChar(destinationPiece))) {
+                return true;
+            }
         }
         System.out.println(board[newRow][newCol].equals("[ ]"));
         // Pawn moves two squares forward on its first move
         if (currentCol == newCol && currentRow + 2 * direction == newRow && currentRow == (isBlackTurn ? 1 : 6) && board[newRow][newCol].equals("[ ]")) {
-            return true;
+            char destinationPiece = board[newRow][newCol].charAt(1);
+            if (destinationPiece == ' ' || (pawn.getColor() != ColorEnum.fromChar(destinationPiece))) {
+                return true;
+            }
         }
 
         // Pawn captures diagonally
+//        if (Math.abs(newCol - currentCol) == 1 && currentRow + direction == newRow &&
+//                board[newRow][newCol].charAt(1) != board[newRow][newCol].charAt(1)) {
+//            return true;
+//        }
+        // Pawn captures diagonally
         if (Math.abs(newCol - currentCol) == 1 && currentRow + direction == newRow &&
-                board[newRow][newCol].charAt(1) != board[newRow][newCol].charAt(1)) {
+                board[newRow][newCol].charAt(1) != ' ' &&
+                board[newRow][newCol].charAt(1) != board[currentRow][currentCol].charAt(1)) {
             return true;
         }
+
 
         return false;
 
