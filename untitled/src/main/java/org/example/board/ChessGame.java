@@ -15,6 +15,10 @@ public class ChessGame {
 
     public Pawn WhitePawn;
 
+    public Rook BlackRook;
+
+    public Rook WhiteRook;
+
     public ChessGame() {
         board = new String[8][8];
         isBlackTurn = true;
@@ -35,7 +39,7 @@ public class ChessGame {
         }
 
 
-        Rook BlackRook = new Rook("[♜]", ColorEnum.BLACK);
+        BlackRook = new Rook("[♜]", ColorEnum.BLACK);
         BlackKnight = new Knight("[♞]", ColorEnum.BLACK);
         Bishop BlackBishop = new Bishop("[♝]", ColorEnum.BLACK);
         Queen blackQueen = new Queen("[♛]", ColorEnum.BLACK);
@@ -63,7 +67,7 @@ public class ChessGame {
         board[1][7] = BlackPawn.getSymbol(); // Black Pawn
 
 
-        Rook WhiteRook = new Rook("[♖]", ColorEnum.WHITE);
+        WhiteRook = new Rook("[♖]", ColorEnum.WHITE);
         WhiteKnight = new Knight("[♘]", ColorEnum.WHITE);
         Bishop WhiteBishop = new Bishop("[♗]", ColorEnum.WHITE);
         Queen WhiteQueen = new Queen("[♕]", ColorEnum.WHITE);
@@ -91,9 +95,9 @@ public class ChessGame {
     }
 
     public void printChessboard() {
-        System.out.print("  a  b  c  d  e  f  g  h\n"); // Column labels
+        System.out.print("  a   b   c   d   e   f   g   h\n"); // Column labels
         for (int row = 0; row < 8; row++) {
-            System.out.print((8 - row) + " "); // Row labels
+            System.out.print((8 - row) + "  "); // Row labels
             for (int col = 0; col < 8; col++) {
                 System.out.print(board[row][col]);
             }
@@ -110,16 +114,16 @@ public class ChessGame {
 
         // Check if the destination square is not occupied by a friendly piece
         if (board[newRow][newCol].charAt(1) == board[currentRow][currentCol].charAt(1)) {
-            System.out.println(board[newRow][newCol].charAt(1)+"eee"+board[currentRow][currentCol].charAt(1));
+
             return false; // Destination square has a friendly piece
         }
 
 
-        if (!(board[currentRow][currentCol].equals("[♟]") || board[currentRow][currentCol].equals("[♙]"))) {
-
-
-            return false;
-        }
+//        if (!(board[currentRow][currentCol].equals("[♟]") || board[currentRow][currentCol].equals("[♙]"))) {
+//
+//
+//            return false;
+//        }
 
         // Determine the direction of movement based on the player's turn
         int direction = isBlackTurn ? 1 : -1;
@@ -140,11 +144,6 @@ public class ChessGame {
             }
         }
 
-        // Pawn captures diagonally
-//        if (Math.abs(newCol - currentCol) == 1 && currentRow + direction == newRow &&
-//                board[newRow][newCol].charAt(1) != board[newRow][newCol].charAt(1)) {
-//            return true;
-//        }
         // Pawn captures diagonally
         if (Math.abs(newCol - currentCol) == 1 && currentRow + direction == newRow &&
                 board[newRow][newCol].charAt(1) != ' ' &&
@@ -184,11 +183,12 @@ public boolean isValidKnightMove(int currentRow, int currentCol, int newRow, int
 
 
 
-    public boolean isValidRookMove(int currentRow, int currentCol, int newRow, int newCol) {
+    public boolean isValidRookMove(int currentRow, int currentCol, int newRow, int newCol ,Rook rook) {
         if (currentRow < 0 || currentRow >= 8 || currentCol < 0 || currentCol >= 8 ||
                 newRow < 0 || newRow >= 8 || newCol < 0 || newCol >= 8) {
             return false;
         }
+
 
         // Rook can move either horizontally (in the same row) or vertically (in the same column)
         if (currentRow == newRow && currentCol != newCol) {
@@ -199,7 +199,10 @@ public boolean isValidKnightMove(int currentRow, int currentCol, int newRow, int
                     return false; // There's an obstruction in the path
                 }
             }
-            return true;
+            char destinationPiece = board[newRow][newCol].charAt(1);
+            if (destinationPiece == ' ' || (rook.getColor() != ColorEnum.fromChar(destinationPiece))) {
+                return true;
+            }
         } else if (currentCol == newCol && currentRow != newRow) {
             // Moving vertically
             int step = (newRow > currentRow) ? 1 : -1;
@@ -208,7 +211,10 @@ public boolean isValidKnightMove(int currentRow, int currentCol, int newRow, int
                     return false; // There's an obstruction in the path
                 }
             }
-            return true;
+            char destinationPiece = board[newRow][newCol].charAt(1);
+            if (destinationPiece == ' ' || (rook.getColor() != ColorEnum.fromChar(destinationPiece))) {
+                return true;
+            }
         }
 
         return false; // Invalid Rook move
@@ -250,9 +256,9 @@ public boolean isValidKnightMove(int currentRow, int currentCol, int newRow, int
         }
 
         // Check if the move is a valid Rook move (horizontal or vertical)
-        if (isValidRookMove(currentRow, currentCol, newRow, newCol)) {
-            return true;
-        }
+//        if (isValidRookMove(currentRow, currentCol, newRow, newCol)) {
+//            return true;
+//        }
 
         // Check if the move is a valid Bishop move (diagonal)
         if (isValidBishopMove(currentRow, currentCol, newRow, newCol)) {
@@ -274,6 +280,14 @@ public boolean isValidKnightMove(int currentRow, int currentCol, int newRow, int
         return (rowDiff <= 1 && colDiff <= 1);
     }
 
+    public boolean isValidMove(int currentRow, int currentCol, int newRow, int newCol ){
+
+        if(currentRow >=8 || currentCol <0 || newCol >= 8 || newCol <= 0 ){
+            return false;
+        }
+        return false;
+    }
+
 
 
     public void movePiece(int currentRow, int currentCol, int newRow, int newCol) {
@@ -289,7 +303,8 @@ public boolean isValidKnightMove(int currentRow, int currentCol, int newRow, int
             board[newRow][newCol] = board[currentRow][currentCol];
             board[currentRow][currentCol] = "[ ]"; // Clear the old position
             isBlackTurn = !isBlackTurn; // Toggle the turn
-        } else if (isValidRookMove(currentRow, currentCol, newRow, newCol)) {
+        } else if (isValidRookMove(currentRow, currentCol, newRow, newCol , BlackRook) ||
+                isValidRookMove(currentRow, currentCol, newRow, newCol , WhiteRook)) {
             // Move the Rook to the new position
             board[newRow][newCol] = board[currentRow][currentCol];
             board[currentRow][currentCol] = "[ ]"; // Clear the old position

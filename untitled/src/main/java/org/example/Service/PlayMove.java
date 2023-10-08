@@ -47,7 +47,11 @@ public class PlayMove {
                     isValidMove = chessGame.isValidKnightMove(currentRow, currentCol, newRow, newCol, chessGame.WhiteKnight);
                 }
             } else if (chessGame.board[currentRow][currentCol].equals("[♜]") || chessGame.board[currentRow][currentCol].equals("[♖]")) {
-                isValidMove = chessGame.isValidRookMove(currentRow, currentCol, newRow, newCol);
+                if (chessGame.isBlackTurn) {
+                    isValidMove = chessGame.isValidRookMove(currentRow, currentCol, newRow, newCol, chessGame.BlackRook);
+                } else {
+                    isValidMove = chessGame.isValidRookMove(currentRow, currentCol, newRow, newCol, chessGame.WhiteRook);
+                }
             } else if (chessGame.board[currentRow][currentCol].equals("[♝]") || chessGame.board[currentRow][currentCol].equals("[♗]")) {
                 isValidMove = chessGame.isValidBishopMove(currentRow, currentCol, newRow, newCol);
             } else if (chessGame.board[currentRow][currentCol].equals("[♛]") || chessGame.board[currentRow][currentCol].equals("[♕]")) {
